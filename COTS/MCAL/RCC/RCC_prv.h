@@ -1,8 +1,8 @@
 #ifndef RCC_PRV_H_
 #define RCC_PRV_H_
 
-#define HSION_MSK		0x00000001
-#define HSIRDY_MSK		0x00000002
+#define HSION_MSK		((u32) 0x00000001)
+#define HSIRDY_MSK		((u32) 0x00000002)
 
 #define NOTREADY		((u8) 0)
 
@@ -15,12 +15,12 @@
 #define SWS0			2
 #define SWS1			3
 
-#define HSEON_MSK		0x00010000
+#define HSEON_MSK		((u32) 0x00010000)
 
 #define HSEBYP			18
-#define HSERDY_MSK		0x00020000
+#define HSERDY_MSK		((u32) 0x00020000)
 
-#define PLLON_MSK		0x01000000
+#define PLLON_MSK		((u32) 0x01000000)
 #define PLLRDY_MSK		0x02000000
 
 #define CSSON			19

@@ -142,10 +142,10 @@ typedef enum{
 
 typedef struct{
 	u32				RCC_u32DivisionFactor_M;
-	u16				RCC_u16MultiplyFactor_N;
 	RCC_tenuPLL_P	RCC_enuPLL_P;
-	u8				RCC_u8SourceClock;
 	RCC_tenuPLL_Q	RCC_enuPLL_Q;
+	u16				RCC_u16MultiplyFactor_N;
+	u8				RCC_u8SourceClock;
 }RCC_tstrPllCfg;
 
 /******************************************* PROTOTYPES *******************************************/

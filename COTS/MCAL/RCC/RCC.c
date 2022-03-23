@@ -4,9 +4,9 @@
  *  Created on: Mar 7, 20221
  *      Author: Kishk
  */
-#include <LIB/Bit_utils.h>
-#include <LIB/Std_types.h>
-#include <LIB/stm32f401cc.h>
+#include <SERVICES/Bit_utils.h>
+#include <SERVICES/Std_types.h>
+#include <SERVICES/stm32f401cc.h>
 #include <MCAL/RCC.h>
 #include <MCAL/RCC_prv.h>
 
@@ -78,9 +78,9 @@ RCC_tenuErrorStatus RCC_enuControlSysClock(u8 Copy_u8Clock) {
 		}
 		/*DUMMY LOOP TO CALCULATE TIME OUT IF CLK NOT SWITCHED IN DESIRED TIME*/
 		LOC_enuReturnError = RCC_enuErrorTimedOut;
-		while (LOC_u16TimeOut-- && (RCC->RCC_CFGR && SWS_MSK >> SWS0) != Copy_u8Clock);
+		while (LOC_u16TimeOut-- && (RCC->RCC_CFGR & SWS_MSK >> SWS0) != Copy_u8Clock);
 		/*CHECK IF THE SYS CLK ALRDY SWITCHED*/
-		if ((RCC->RCC_CFGR && SWS_MSK >> SWS0) == Copy_u8Clock) {
+		if ((RCC->RCC_CFGR & SWS_MSK >> SWS0) == Copy_u8Clock) {
 			/*MAKE RETURN ERROR WITH OK AND BREAK THE LOOP*/
 			LOC_enuReturnError = RCC_enuOk;
 		}
@@ -215,7 +215,7 @@ RCC_tenuErrorStatus RCC_enuGetClockRdyStatus(u8 Copy_u8Clock,
 		switch (Copy_u8Clock) {
 		case RCC_u8HSI_CLOCK:
 			/*CHECK IF CLK IS RDY AND STORE IT TO THE PASSED ADDRESS*/
-			if (RCC->RCC_CR && HSIRDY_MSK) {
+			if (RCC->RCC_CR & HSIRDY_MSK) {
 				*Add_pu8RtrnRdyStatus = RCC_u8CLK_RDY;
 			} else {
 				*Add_pu8RtrnRdyStatus = RCC_u8CLK_NOTRDY;
@@ -223,7 +223,7 @@ RCC_tenuErrorStatus RCC_enuGetClockRdyStatus(u8 Copy_u8Clock,
 			break;
 		case RCC_u8HSE_CLOCK:
 			/*CHECK IF CLK IS RDY AND STORE IT TO THE PASSED ADDRESS*/
-			if (RCC->RCC_CR && HSERDY_MSK) {
+			if (RCC->RCC_CR & HSERDY_MSK) {
 				*Add_pu8RtrnRdyStatus = RCC_u8CLK_RDY;
 			} else {
 				*Add_pu8RtrnRdyStatus = RCC_u8CLK_NOTRDY;
@@ -231,7 +231,7 @@ RCC_tenuErrorStatus RCC_enuGetClockRdyStatus(u8 Copy_u8Clock,
 			break;
 		case RCC_u8PLL_CLOCK:
 			/*CHECK IF CLK IS RDY AND STORE IT TO THE PASSED ADDRESS*/
-			if (RCC->RCC_CR && PLLRDY_MSK) {
+			if (RCC->RCC_CR & PLLRDY_MSK) {
 				*Add_pu8RtrnRdyStatus = RCC_u8CLK_RDY;
 			} else {
 				*Add_pu8RtrnRdyStatus = RCC_u8CLK_NOTRDY;
@@ -295,10 +295,10 @@ RCC_tenuErrorStatus RCC_enuConfigurePLL(RCC_tstrPllCfg Copy_strCfg) {
 	} else {
 		/*ASSIGN THE DESIRED CONFIGURATION INTO PLLCFGR REGISTER*/
 		RCC->RCC_PLLCFGR = (Copy_strCfg.RCC_u32DivisionFactor_M)
-				| (Copy_strCfg.RCC_u16MultiplyFactor_N << PLLN)
-				| (Copy_strCfg.RCC_enuPLL_P << PLLP)
-				| (Copy_strCfg.RCC_u8SourceClock << PLLSRC)
-				| (Copy_strCfg.RCC_enuPLL_Q << PLLQ);
+				| (u16) (Copy_strCfg.RCC_u16MultiplyFactor_N << PLLN)
+				| (RCC_tenuPLL_P) (Copy_strCfg.RCC_enuPLL_P << PLLP)
+				| (u8)(Copy_strCfg.RCC_u8SourceClock << PLLSRC)
+				| (u16)(Copy_strCfg.RCC_enuPLL_Q << PLLQ);
 
 	}
 	/*RETURN ERROR STATUS*/

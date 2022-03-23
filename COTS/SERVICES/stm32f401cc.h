@@ -38,5 +38,34 @@ typedef struct
 
 #define RCC		((RCC_RegDef_t *) RCC_u32_BASE_ADDRESS)
 
+/***************************************************GPIO******************************************************/
 
+#define GPIOA_u32_BASE_ADDRESS		0x40020000
+#define GPIOB_u32_BASE_ADDRESS		0x40020400
+#define GPIOC_u32_BASE_ADDRESS		0x40020800
+#define GPIOD_u32_BASE_ADDRESS		0x40020C00
+#define GPIOE_u32_BASE_ADDRESS		0x40021000
+#define GPIOH_u32_BASE_ADDRESS		0x40021C00
+
+
+typedef struct
+{
+	volatile u32 GPIOx_MODER;
+	volatile u32 GPIOx_OTYPER;
+	volatile u32 GPIOx_OSPEEDR;
+	volatile u32 GPIOx_PUPDR;
+	volatile u32 GPIOx_IDR;
+	volatile u32 GPIOx_ODR;
+	volatile u32 GPIOx_BSRR;
+	volatile u32 GPIOx_LCKR;
+	volatile u32 GPIOx_AFRL;
+	volatile u32 GPIOx_AFRH;
+}GPIO_RegDef_t;
+
+#define GPIOA		((GPIO_RegDef_t *) GPIOA_u32_BASE_ADDRESS)
+#define GPIOB		((GPIO_RegDef_t *) GPIOB_u32_BASE_ADDRESS)
+#define GPIOC		((GPIO_RegDef_t *) GPIOC_u32_BASE_ADDRESS)
+#define GPIOD		((GPIO_RegDef_t *) GPIOD_u32_BASE_ADDRESS)
+#define GPIOE		((GPIO_RegDef_t *) GPIOE_u32_BASE_ADDRESS)
+#define GPIOH		((GPIO_RegDef_t *) GPIOH_u32_BASE_ADDRESS)
 #endif

@@ -11,8 +11,8 @@
 typedef struct{
 	u64 GPIO_u64Mode;
 	u32	GPIO_u32Speed;
-	u16	GPIO_u16Pin;
 	void *	GPIO_pvPort;
+	u16	GPIO_u16Pin;
 }GpioPinCfg_t;
 
 typedef enum{
@@ -29,49 +29,49 @@ typedef enum{
 }GpioErrorStatus_t;
 
 /*******************************************  MACROS  ****************************************************/
-#define	GPIO_u8PIN_00				0x0001
-#define	GPIO_u8PIN_01				0x0002
-#define	GPIO_u8PIN_02				0x0004
-#define	GPIO_u8PIN_03				0x0008
-#define	GPIO_u8PIN_04				0x0010
-#define	GPIO_u8PIN_05				0x0020
-#define	GPIO_u8PIN_06				0x0040
-#define	GPIO_u8PIN_07				0x0080
-#define	GPIO_u8PIN_08				0x0100
-#define	GPIO_u8PIN_09				0x0200
-#define	GPIO_u8PIN_10				0x0400
-#define	GPIO_u8PIN_11				0x0800
-#define	GPIO_u8PIN_12				0x1000
-#define	GPIO_u8PIN_13				0x2000
-#define	GPIO_u8PIN_14				0x4000
-#define	GPIO_u8PIN_15				0x8000
+#define	GPIO_u16PIN_00				((u16) 0x0001)
+#define	GPIO_u16PIN_01				((u16) 0x0002)
+#define	GPIO_u16PIN_02				((u16) 0x0004)
+#define	GPIO_u16PIN_03				((u16) 0x0008)
+#define	GPIO_u16PIN_04				((u16) 0x0010)
+#define	GPIO_u16PIN_05				((u16) 0x0020)
+#define	GPIO_u16PIN_06				((u16) 0x0040)
+#define	GPIO_u16PIN_07				((u16) 0x0080)
+#define	GPIO_u16PIN_08				((u16) 0x0100)
+#define	GPIO_u16PIN_09				((u16) 0x0200)
+#define	GPIO_u16PIN_10				((u16) 0x0400)
+#define	GPIO_u16PIN_11				((u16) 0x0800)
+#define	GPIO_u16PIN_12				((u16) 0x1000)
+#define	GPIO_u16PIN_13				((u16) 0x2000)
+#define	GPIO_u16PIN_14				((u16) 0x4000)
+#define	GPIO_u16PIN_15				((u16) 0x8000)
 
-#define GPIO_u8PORTA				((void *) GPIOA_u32_BASE_ADDRESS)
-#define GPIO_u8PORTB				((void *) GPIOB_u32_BASE_ADDRESS)
-#define GPIO_u8PORTC				((void *) GPIOC_u32_BASE_ADDRESS)
-#define GPIO_u8PORTD				((void *) GPIOD_u32_BASE_ADDRESS)
-#define GPIO_u8PORTE				((void *) GPIOE_u32_BASE_ADDRESS)
-#define GPIO_u8PORTH				((void *) GPIOH_u32_BASE_ADDRESS)
+#define GPIO_pvPORTA				((void *) GPIOA_u32_BASE_ADDRESS)
+#define GPIO_pvPORTB				((void *) GPIOB_u32_BASE_ADDRESS)
+#define GPIO_pvPORTC				((void *) GPIOC_u32_BASE_ADDRESS)
+#define GPIO_pvPORTD				((void *) GPIOD_u32_BASE_ADDRESS)
+#define GPIO_pvPORTE				((void *) GPIOE_u32_BASE_ADDRESS)
+#define GPIO_pvPORTH				((void *) GPIOH_u32_BASE_ADDRESS)
 
 
-#define GPIO_u64MODE_OUTPUT_PP		(0x00000001)
-#define GPIO_u64MODE_OUTPUT_PP_PU	(0x00000101)
-#define GPIO_u64MODE_OUTPUT_PP_PD	(0x00000201)
-#define GPIO_u64MODE_OUTPUT_OD		(0x00000011)
-#define GPIO_u64MODE_OUTPUT_OD_PU	(0x00000111)
-#define GPIO_u64MODE_OUTPUT_OD_PD	(0x00000211)
+#define GPIO_u32MODE_OUTPUT_PP		(0x00000001)
+#define GPIO_u32MODE_OUTPUT_PP_PU	(0x00000101)
+#define GPIO_u32MODE_OUTPUT_PP_PD	(0x00000201)
+#define GPIO_u32MODE_OUTPUT_OD		(0x00000011)
+#define GPIO_u32MODE_OUTPUT_OD_PU	(0x00000111)
+#define GPIO_u32MODE_OUTPUT_OD_PD	(0x00000211)
 
-#define GPIO_u64MODE_INPUT_PU		(0x00000100)
-#define GPIO_u64MODE_INPUT_PD		(0x00000200)
+#define GPIO_u32MODE_INPUT_PU		(0x00000100)
+#define GPIO_u32MODE_INPUT_PD		(0x00000200)
 
-#define GPIO_u64MODE_AF_PP			(0x00000002)
-#define GPIO_u64MODE_AF_PP_PU		(0x00000102)
-#define GPIO_u64MODE_AF_PP_PD		(0x00000202)
-#define GPIO_u64MODE_AF_OD			(0x00000012)
-#define GPIO_u64MODE_AF_OD_PU		(0x00000112)
-#define GPIO_u64MODE_AF_OD_PD		(0x00000212)
+#define GPIO_u32MODE_AF_PP			(0x00000002)
+#define GPIO_u32MODE_AF_PP_PU		(0x00000102)
+#define GPIO_u32MODE_AF_PP_PD		(0x00000202)
+#define GPIO_u32MODE_AF_OD			(0x00000012)
+#define GPIO_u32MODE_AF_OD_PU		(0x00000112)
+#define GPIO_u32MODE_AF_OD_PD		(0x00000212)
 
-#define GPIO_u64MODE_ANALOG			(0x00000003)
+#define GPIO_u32MODE_ANALOG			(0x00000003)
 
 #define GPIO_u8PULL_OFF				((u8) 0x00)
 #define GPIO_u8PULL_UP				((u8) 0x01)
