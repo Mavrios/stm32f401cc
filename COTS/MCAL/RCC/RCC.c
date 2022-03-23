@@ -25,7 +25,7 @@ RCC_tenuErrorStatus RCC_enuControlSysClock(u8 Copy_u8Clock) {
 	/*DIFINE RETURN ERROR VARIABLE*/
 	RCC_tenuErrorStatus LOC_enuReturnError = RCC_enuOk;
 	/*DEFINE ITERATOR FOR ITERATION USING*/
-	u16 LOC_u16Iterator = 0;
+	u16 LOC_u16TimeOut = RCC_u16TIME_OUT;
 	/*DEFINE TEMP VARIABLE TO TEMPERORY STORE CFGR REGISTER*/
 	u32 LOC_u32TempCFGR;
 	/*CHECK IF THE CLOCK OUT OF THE RANGE*/
@@ -43,17 +43,6 @@ RCC_tenuErrorStatus RCC_enuControlSysClock(u8 Copy_u8Clock) {
 				LOC_u32TempCFGR &= RSTSW_MSK;
 				LOC_u32TempCFGR |= Copy_u8Clock;
 				RCC->RCC_CFGR = LOC_u32TempCFGR;
-				/*DUMMY LOOP TO CALCULATE TIME OUT IF CLK NOT SWITCHED IN DESIRED TIME*/
-				LOC_enuReturnError = RCC_enuErrorTimedOut;
-				for (LOC_u16Iterator = 0; LOC_u16Iterator < RCC_u16TIME_OUT;
-						LOC_u16Iterator++) {
-					/*CHECK IF THE SYS CLK ALRDY SWITCHED*/
-					if ((RCC->RCC_CFGR && SWS_MSK >> SWS0) == Copy_u8Clock) {
-						/*MAKE RETURN ERROR WITH OK AND BREAK THE LOOP*/
-						LOC_enuReturnError = RCC_enuOk;
-						break;
-					}
-				}
 			} else {
 				LOC_enuReturnError = RCC_enuErrorClkNotRdy;
 			}
@@ -68,15 +57,6 @@ RCC_tenuErrorStatus RCC_enuControlSysClock(u8 Copy_u8Clock) {
 				RCC->RCC_CFGR = LOC_u32TempCFGR;
 				/*DUMMY LOOP TO CALCULATE TIME OUT IF CLK NOT SWITCHED IN DESIRED TIME*/
 				LOC_enuReturnError = RCC_enuErrorTimedOut;
-				for (LOC_u16Iterator = 0; LOC_u16Iterator < RCC_u16TIME_OUT;
-						LOC_u16Iterator++) {
-					/*CHECK IF THE SYS CLK ALRDY SWITCHED*/
-					if ((RCC->RCC_CFGR && SWS_MSK >> SWS0) == Copy_u8Clock) {
-						/*MAKE RETURN ERROR WITH OK AND BREAK THE LOOP*/
-						LOC_enuReturnError = RCC_enuOk;
-						break;
-					}
-				}
 			} else {
 				LOC_enuReturnError = RCC_enuErrorClkNotRdy;
 			}
@@ -91,19 +71,18 @@ RCC_tenuErrorStatus RCC_enuControlSysClock(u8 Copy_u8Clock) {
 				RCC->RCC_CFGR = LOC_u32TempCFGR;
 				/*DUMMY LOOP TO CALCULATE TIME OUT IF CLK NOT SWITCHED IN DESIRED TIME*/
 				LOC_enuReturnError = RCC_enuErrorTimedOut;
-				for (LOC_u16Iterator = 0; LOC_u16Iterator < RCC_u16TIME_OUT;
-						LOC_u16Iterator++) {
-					/*CHECK IF THE SYS CLK ALRDY SWITCHED*/
-					if ((RCC->RCC_CFGR && SWS_MSK >> SWS0) == Copy_u8Clock) {
-						/*MAKE RETURN ERROR WITH OK AND BREAK THE LOOP*/
-						LOC_enuReturnError = RCC_enuOk;
-						break;
-					}
-				}
 			} else {
 				LOC_enuReturnError = RCC_enuErrorClkNotRdy;
 			}
 			break;
+		}
+		/*DUMMY LOOP TO CALCULATE TIME OUT IF CLK NOT SWITCHED IN DESIRED TIME*/
+		LOC_enuReturnError = RCC_enuErrorTimedOut;
+		while (LOC_u16TimeOut-- && (RCC->RCC_CFGR && SWS_MSK >> SWS0) != Copy_u8Clock);
+		/*CHECK IF THE SYS CLK ALRDY SWITCHED*/
+		if ((RCC->RCC_CFGR && SWS_MSK >> SWS0) == Copy_u8Clock) {
+			/*MAKE RETURN ERROR WITH OK AND BREAK THE LOOP*/
+			LOC_enuReturnError = RCC_enuOk;
 		}
 	}
 	/*RETURN POINT OF FUNCTION TO RETURN ERROR STATUS*/
@@ -124,7 +103,7 @@ RCC_tenuErrorStatus RCC_enuControlSysClock(u8 Copy_u8Clock) {
  ********************************************************************************************************/
 RCC_tenuErrorStatus RCC_enuControlClock(u8 Copy_u8Clock, u8 Copy_u8Status) {
 	/*DECLARE ITERATOR AND RETURN ERROR STATUS VARIABLES*/
-	u16 LOC_u16Iterator;
+	u16 LOC_u16TimeOut = RCC_u16TIME_OUT;;
 	RCC_tenuErrorStatus LOC_enuReturnError = RCC_enuOk;
 	/*CHECK IF THE ENTERED CLK OUT OF THE RANGE (INVALID)*/
 	if (Copy_u8Clock > RCC_u8PLL_CLOCK) {
@@ -149,14 +128,11 @@ RCC_tenuErrorStatus RCC_enuControlClock(u8 Copy_u8Clock, u8 Copy_u8Status) {
 				RCC->RCC_CR |= HSION_MSK;
 				/*WAIT UNTIL HSI GET READY AND CHECK IF IT'S TIMED OUT*/
 				LOC_enuReturnError = RCC_enuErrorTimedOut;
-				for (LOC_u16Iterator = 0; LOC_u16Iterator < RCC_u16TIME_OUT;
-						LOC_u16Iterator++) {
+				while (LOC_u16TimeOut-- && !(RCC->RCC_CR & HSIRDY_MSK));
 					/*IF THE CLK RDY BREAK THE LOOP AND ASSIGN RETURN ERROR WITH "OK"*/
 					if ((RCC->RCC_CR & HSIRDY_MSK)) {
 						LOC_enuReturnError = RCC_enuOk;
-						break;
 					}
-				}
 				break;
 			case RCC_u8CLK_OFF:
 				/*TURN OFF THE CLK*/
@@ -172,14 +148,12 @@ RCC_tenuErrorStatus RCC_enuControlClock(u8 Copy_u8Clock, u8 Copy_u8Status) {
 				RCC->RCC_CR |= HSEON_MSK;
 				/*WAIT UNTIL HSE GET READY AND CHECK IF IT'S TIMED OUT*/
 				LOC_enuReturnError = RCC_enuErrorTimedOut;
-				for (LOC_u16Iterator = 0; LOC_u16Iterator < RCC_u16TIME_OUT;
-						LOC_u16Iterator++) {
+				while (LOC_u16TimeOut-- && !(RCC->RCC_CR & HSERDY_MSK));
 					/*IF THE CLK RDY BREAK THE LOOP AND ASSIGN RETURN ERROR WITH "OK"*/
 					if ((RCC->RCC_CR & HSERDY_MSK)) {
 						LOC_enuReturnError = RCC_enuOk;
 						break;
 					}
-				}
 
 				break;
 			case RCC_u8CLK_OFF:
@@ -195,14 +169,12 @@ RCC_tenuErrorStatus RCC_enuControlClock(u8 Copy_u8Clock, u8 Copy_u8Status) {
 				RCC->RCC_CR |= PLLON_MSK;
 				/*WAIT UNTIL PLL GET READY AND CHECK IF IT'S TIMED OUT*/
 				LOC_enuReturnError = RCC_enuErrorTimedOut;
-				for (LOC_u16Iterator = 0; LOC_u16Iterator < RCC_u16TIME_OUT;
-						LOC_u16Iterator++) {
+				while (LOC_u16TimeOut-- && !(RCC->RCC_CR & PLLRDY_MSK));
 					/*IF THE CLK RDY BREAK THE LOOP AND ASSIGN RETURN ERROR WITH "OK"*/
 					if ((RCC->RCC_CR & PLLRDY_MSK)) {
 						LOC_enuReturnError = RCC_enuOk;
 						break;
 					}
-				}
 
 				break;
 			case RCC_u8CLK_OFF:
@@ -433,7 +405,7 @@ RCC_tenuErrorStatus RCC_enuControlBusPrescaler(u32 Copy_u8Prescaler) {
 
 /****************************************************************************************************
  * Function:  RCC_enuEnablePeripheralClk															*
- * --------------------                                                                             *
+ * ------------------------------------------------------------------------------------------------ *
  * ENABLE PERIPHERAL SPECIFIC PERIPHERAL CLK                                                        *
  *                                                                                                  *
  *  Copy_u8Bus: DESIRED CLK --> OPTIONS --> (RCC_u8APB1_BUS - RCC_u8APB2_BUS - RCC_u8AHB_BUS)       *
@@ -476,7 +448,7 @@ RCC_tenuErrorStatus RCC_enuEnablePeripheralClk(u8 Copy_u8Bus,
 
 /****************************************************************************************************
  * Function:  RCC_enuDisablePeripheralClk															*
- * --------------------                                                                             *
+ * ------------------------------------------------------------------------------------------------ *
  * DISABLE PERIPHERAL SPECIFIC PERIPHERAL CLK                                                       *
  *                                                                                                  *
  *  Copy_u8Bus: DESIRED CLK --> OPTIONS --> (RCC_u8APB1_BUS - RCC_u8APB2_BUS - RCC_u8AHB_BUS)       *

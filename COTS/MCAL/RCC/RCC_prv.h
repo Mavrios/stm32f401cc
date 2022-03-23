@@ -38,5 +38,5 @@
 #define PLLN_MIN		192
 #define PLLN_MAX		432
 
-#define RCC_u16TIME_OUT		((u16) 10000)
+#define RCC_u16TIME_OUT		((u16) 500)
 #endif
