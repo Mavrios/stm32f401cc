@@ -62,10 +62,49 @@ typedef struct
 	volatile u32 GPIOx_AFRH;
 }GPIO_RegDef_t;
 
-#define GPIOA		((GPIO_RegDef_t *) GPIOA_u32_BASE_ADDRESS)
-#define GPIOB		((GPIO_RegDef_t *) GPIOB_u32_BASE_ADDRESS)
-#define GPIOC		((GPIO_RegDef_t *) GPIOC_u32_BASE_ADDRESS)
-#define GPIOD		((GPIO_RegDef_t *) GPIOD_u32_BASE_ADDRESS)
-#define GPIOE		((GPIO_RegDef_t *) GPIOE_u32_BASE_ADDRESS)
-#define GPIOH		((GPIO_RegDef_t *) GPIOH_u32_BASE_ADDRESS)
+#define GPIOA		((void *) GPIOA_u32_BASE_ADDRESS)
+#define GPIOB		((void *) GPIOB_u32_BASE_ADDRESS)
+#define GPIOC		((void *) GPIOC_u32_BASE_ADDRESS)
+#define GPIOD		((void *) GPIOD_u32_BASE_ADDRESS)
+#define GPIOE		((void *) GPIOE_u32_BASE_ADDRESS)
+#define GPIOH		((void *) GPIOH_u32_BASE_ADDRESS)
+
+
+#define NVIC_u32BASE_ADDRESS		0xE000E100
+
+
+typedef struct{
+	volatile u32 NVIC_ISER[8];
+	volatile u32 Reserved0[24];
+	volatile u32 NVIC_ICER[8];
+	volatile u32 Reserved1[24];
+	volatile u32 NVIC_ISPR[8];
+	volatile u32 Reserved2[24];
+	volatile u32 NVIC_ICPR[8];
+	volatile u32 Reserved3[24];
+	volatile u32 NVIC_IABR[8];
+	volatile u32 Reserved4[56];
+	volatile u8 NVIC_IPR[240];
+	volatile u32 Reserved5[644];
+	volatile u32 NVIC_STIR;
+}NVIC_Registers_t;
+
+
+#define NVIC		((NVIC_Registers_t *) NVIC_u32BASE_ADDRESS)
+
+
+#define AISCR		*((volatile u32 *) 0xE000ED0C)
+
+
+
+#define SYSTICK_u32_BASE_ADDRESS		0xE000E010
+
+typedef struct{
+	volatile u32 STK_CTRL;
+	volatile u32 STK_LOAD;
+	volatile u32 STK_VAL;
+	volatile u32 STK_CALIB;
+}SYSTICK_Registers_t;
+
+#define SYSTICK		((SYSTICK_Registers_t *) SYSTICK_u32_BASE_ADDRESS)
 #endif
