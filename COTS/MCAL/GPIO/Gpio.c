@@ -8,8 +8,8 @@
 #include <SERVICES/Std_types.h>
 #include <SERVICES/Bit_utils.h>
 #include <SERVICES/stm32f401cc.h>
-#include <MCAL/Gpio.h>
-#include <MCAL/Gpio_prv.h>
+#include <MCAL/GPIO/Gpio.h>
+#include <MCAL/GPIO/Gpio_prv.h>
 
 /*
  * Function:  Gpio_enuInit
@@ -39,21 +39,21 @@ GpioErrorStatus_t Gpio_enuInit(GpioPinCfg_t * Add_strGpioCfg) {
 					& (GPIO_PIN_MSK << Loc_u8Iterator)) {
 
 				/*APPLY MSK TO GET THE MODE*/
-				Loc_TmpMdOdPr = Add_strGpioCfg->GPIO_u64Mode & GPIO_MODE_MSK;
+				Loc_TmpMdOdPr = Add_strGpioCfg->GPIO_u32Mode & GPIO_MODE_MSK;
 				/*SET THE MODE WITH DESIRED VALUE*/
 				Loc_AddPort->GPIOx_MODER &= ~(GPIO_u32MODE_CLR_MSK
 						<< (Loc_u8Iterator * GPIO_u8DOUBLE_BIT));
 				Loc_AddPort->GPIOx_MODER |= Loc_TmpMdOdPr
 						<< (Loc_u8Iterator * GPIO_u8DOUBLE_BIT);
 				/*APPLY MSK TO GET THE OTY*/
-				Loc_TmpMdOdPr = (Add_strGpioCfg->GPIO_u64Mode & GPIO_OTY_MSK)
+				Loc_TmpMdOdPr = (Add_strGpioCfg->GPIO_u32Mode & GPIO_OTY_MSK)
 						>> GPIO_OTY_SHFT;
 				/*SET THE OTY WITH DESIRED VALUE*/
 				Loc_AddPort->GPIOx_OTYPER &= (u32) ~(GPIO_u8PP_OD
 						<< Loc_u8Iterator);
 				Loc_AddPort->GPIOx_OTYPER |= Loc_TmpMdOdPr << Loc_u8Iterator;
 				/*APPLY MSK TO GET THE PULL UP AND PULL DOWN RESISTOR*/
-				Loc_TmpMdOdPr = (Add_strGpioCfg->GPIO_u64Mode & GPIO_PUPDR_MSK)
+				Loc_TmpMdOdPr = (Add_strGpioCfg->GPIO_u32Mode & GPIO_PUPDR_MSK)
 						>> GPIO_PUPD_SHFT;
 				/*SET THE PUPD WITH DESIRED VALUE*/
 				Loc_AddPort->GPIOx_PUPDR &= (u32) ~(GPIO_u8PULL_CLR_MSK
@@ -257,292 +257,16 @@ GpioErrorStatus_t Gpio_SetAlternateFunc(GpioPinCfg_t * Add_strGpioCfg,
 					& (GPIO_PIN_MSK << Loc_u8Iterator)) {
 				/*CHECK IF THE PIN IN L REGISTER*/
 				if (Loc_u8Iterator <= GPIO_u8LPINS_MSK) {
-					/*SWITCH IN ALTERANATE FUNCTION TO MAKE SURE IT'S VALID*/
-					switch (Copy_u8Function) {
-					case GPIO_u8ALTERNATE_FUNC_00:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_01:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_02:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_03:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_04:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_05:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_06:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_07:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_08:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_09:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_10:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_11:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_12:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_13:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_14:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_15:
-						Loc_AddPort->GPIOx_AFRL &=
-								(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-										<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					default:
-						Loc_enuReturnError = Gpio_enuErrorAlternateFunction;
-						break;
+					Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
+							<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
+					Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_u8Function
+							<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
+				} else if (Loc_u8Iterator > GPIO_u8LPINS_MSK) {
 
-					}
-				} else {
-					if (Loc_u8Iterator > GPIO_u8LPINS_MSK) {
-						switch (Copy_u8Function) {
-						case GPIO_u8ALTERNATE_FUNC_00:
-							Loc_AddPort->GPIOx_AFRH &=
-									(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |=
-									(u32) (Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_01:
-							Loc_AddPort->GPIOx_AFRH &=
-									(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |=
-									(u32) (Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_02:
-							Loc_AddPort->GPIOx_AFRH &=
-									(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |=
-									(u32) (Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_03:
-							Loc_AddPort->GPIOx_AFRH &=
-									(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |=
-									(u32) (Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_04:
-							Loc_AddPort->GPIOx_AFRH &=
-									(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |=
-									(u32) (Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_05:
-							Loc_AddPort->GPIOx_AFRH &=
-									(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |=
-									(u32) (Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_06:
-							Loc_AddPort->GPIOx_AFRH &=
-									(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |=
-									(u32) (Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_07:
-							Loc_AddPort->GPIOx_AFRH &=
-									(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |=
-									(u32) (Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_08:
-									Loc_AddPort->GPIOx_AFRH &= (u32)
-											~(GPIO_u8ALTERNATE_CLR_MSK
-													<< ((Loc_u8Iterator - 8)
-															* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32)
-									(Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_09:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32)
-									(Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_10:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32)
-									(Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_11:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32)
-									(Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_12:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32)
-									(Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_13:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32)
-									(Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_14:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32)
-									(Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_15:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32)
-									(Copy_u8Function
-											<< ((Loc_u8Iterator - 8)
-													* GPIO_u8QUADRO_BIT));
-							break;
-						default:
-							Loc_enuReturnError = Gpio_enuErrorAlternateFunction;
-							break;
-						}
-					}
+					Loc_AddPort->GPIOx_AFRH &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
+							<< ((Loc_u8Iterator - 8) * GPIO_u8QUADRO_BIT));
+					Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_u8Function
+							<< ((Loc_u8Iterator - 8) * GPIO_u8QUADRO_BIT));
 				}
 
 			}
@@ -585,244 +309,15 @@ GpioErrorStatus_t Gpio_SetAlternateFuncPort(void * GPIO_pvPort, u16 Copy_u16Pin,
 				/*CHECK IF THE PIN IN L REGISTER*/
 				if (Loc_u8Iterator <= GPIO_u8LPINS_MSK) {
 					/*SWITCH IN ALTERANATE FUNCTION TO MAKE SURE IT'S VALID*/
-					switch (Copy_pu32Function) {
-					case GPIO_u8ALTERNATE_FUNC_00:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_01:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_02:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_03:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_04:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_05:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_06:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_07:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_08:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_09:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_10:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_11:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_12:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_13:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_14:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					case GPIO_u8ALTERNATE_FUNC_15:
-						Loc_AddPort->GPIOx_AFRL &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
-								<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-						break;
-					default:
-						Loc_enuReturnError = Gpio_enuErrorAlternateFunction;
-						break;
-
-					}
-				} else {
-					if (Loc_u8Iterator <= GPIO_u8LPINS_MSK) {
-						switch (Copy_pu32Function) {
-						case GPIO_u8ALTERNATE_FUNC_00:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_01:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_02:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_03:
-							Loc_AddPort->GPIOx_AFRH &=(u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_04:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_05:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_06:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_07:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_08:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_09:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_10:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_11:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_12:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_13:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_14:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						case GPIO_u8ALTERNATE_FUNC_15:
-							Loc_AddPort->GPIOx_AFRH &= (u32)
-									~(GPIO_u8ALTERNATE_CLR_MSK
-											<< (Loc_u8Iterator
-													* GPIO_u8QUADRO_BIT));
-							Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
-									<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
-							break;
-						default:
-							Loc_enuReturnError = Gpio_enuErrorAlternateFunction;
-							break;
-						}
-					}
+					Loc_AddPort->GPIOx_AFRL &=(u32) ~(GPIO_u8ALTERNATE_CLR_MSK
+							<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
+					Loc_AddPort->GPIOx_AFRL |= (u32) (Copy_pu32Function
+							<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
+				} else if (Loc_u8Iterator <= GPIO_u8LPINS_MSK) {
+					Loc_AddPort->GPIOx_AFRH &= (u32) ~(GPIO_u8ALTERNATE_CLR_MSK
+							<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
+					Loc_AddPort->GPIOx_AFRH |= (u32) (Copy_pu32Function
+							<< (Loc_u8Iterator * GPIO_u8QUADRO_BIT));
 				}
 
 			}

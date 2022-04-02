@@ -21,6 +21,13 @@ typedef enum{
 	Switch_Nok
 }Switch_tenuErrorStatus;
 
+typedef enum{
+	Switch_enuNotPressed,
+	Switch_enuPressed,
+	Switch_enuPreNotPressed,
+	Switch_enuPrePressed,
+}Switch_tenuStatus;
+
 typedef struct{
 	void * Port;
 	u16 Pin;
@@ -50,7 +57,13 @@ extern Switch_tenuErrorStatus Switch_init(void);
  *  CHECK Switch_tenuErrorStatus ERROR ENUM.
  */
 extern Switch_tenuErrorStatus Switch_readState(u16 Copy_u16SwitchNum , u8 *Copy_u8SwitchState);
-
+/*
+ * Function:  Switch_Task
+ * --------------------
+ * SWITCH TASK TO BE CHECKED EVERY 5MS I.E
+ *
+ */
+extern void Switch_Task(void);
 /************************************ EXTERN USED VARIABLES *******************************************/
 const Switch_Cnfg_t Switchs [NUM_OF_SWITCH];
 #endif /* HAL_SWITCH_SWITCH_H_ */

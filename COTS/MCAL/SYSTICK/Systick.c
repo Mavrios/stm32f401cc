@@ -10,9 +10,9 @@
 #include <SERVICES/Std_types.h>
 #include <SERVICES/Bit_utils.h>
 #include <SERVICES/stm32f401cc.h>
-#include <MCAL/Systick.h>
-#include <MCAL/Systick_cfg.h>
-#include <MCAL/Systick_prv.h>
+#include <MCAL/Systick/Systick.h>
+#include <MCAL/Systick/Systick_cfg.h>
+#include <MCAL/Systick/Systick_prv.h>
 
 static SystickISR CallBack = NULL;
 extern void

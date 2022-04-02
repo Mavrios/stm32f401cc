@@ -8,7 +8,7 @@
 #include <SERVICES/Std_types.h>
 #include <SERVICES/Bit_utils.h>
 #include <HAL/Switch/Switch.h>
-#include <MCAL/Gpio.h>
+#include <MCAL/GPIO/Gpio.h>
 
 
 const Switch_Cnfg_t Switchs [NUM_OF_SWITCH] = {

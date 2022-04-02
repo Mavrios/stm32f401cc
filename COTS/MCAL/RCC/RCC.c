@@ -4,11 +4,11 @@
  *  Created on: Mar 7, 20221
  *      Author: Kishk
  */
-#include <SERVICES/Bit_utils.h>
 #include <SERVICES/Std_types.h>
+#include <SERVICES/Bit_utils.h>
 #include <SERVICES/stm32f401cc.h>
-#include <MCAL/RCC.h>
-#include <MCAL/RCC_prv.h>
+#include <MCAL/RCC/RCC.h>
+#include <MCAL/RCC/RCC_prv.h>
 
 
 /*******************************************************************************************************

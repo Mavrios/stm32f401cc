@@ -9,10 +9,10 @@
 #include <SERVICES/Std_types.h>
 #include <SERVICES/Bit_utils.h>
 
-#include <MCAL/RCC.h>
-#include <MCAL/Gpio.h>
 #include <HAL/LED/hLed.h>
 #include <HAL/LED/hLed_cfg.h>
+#include <MCAL/GPIO/Gpio.h>
+#include <MCAL/RCC/RCC.h>
 
 
 #define RCC_ENABLE_PERI()			switch((u32)Leds[Loc_u8Iterator].Port){\

@@ -8,9 +8,11 @@
 #ifndef SYSTICK_H_
 #define SYSTICK_H_
 
+/******************************************** TYPEDEF *********************************************/
+
 typedef void (*SystickISR) (void);
 
-
+/******************************************** MACROS **********************************************/
 #define SYSTICK_u32AHB_DIV_BY_1			((u32) 0x02)
 #define SYSTICK_u32AHB_DIV_BY_8			((u32) 0x06)
 
