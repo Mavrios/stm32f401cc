@@ -28,8 +28,12 @@ SysTick_Handler (void);
  */
 void Systick_Init(u32 Copy_u32TimeMs)
 {
+#if SYSTICK_u32CLK_SRC == SYSTICK_u32AHB_DIV_BY_1
 	/*CALCULATE HOW MANY TICK TO GET 1 MILLI*/
+	u32 Loc_u32Clk = (SYSTICK_u32SYS_CLK / SYSTICK_u32AHB_DIV_BY_1) / SYSTICK_u32MILLI_SEC;
+#elif SYSTICK_u32CLK_SRC == SYSTICK_u32AHB_DIV_BY_8
 	u32 Loc_u32Clk = (SYSTICK_u32SYS_CLK / SYSTICK_u32AHB_CFG_DIV_BY_8) / SYSTICK_u32MILLI_SEC;
+#endif
 	/*ASSIGN THE VALUE INTO LOAD REGISTER*/
 	SYSTICK->STK_LOAD = Copy_u32TimeMs * Loc_u32Clk;
 	/*RESET STK VAL*/
@@ -45,16 +49,23 @@ void Systick_Init(u32 Copy_u32TimeMs)
  *
  *  Add_pfCallBackFunction: ADDRESS OF THE FUNCTION TO BE CALLED WHEN SYSTICK TIMER FINISHED
  *
+ *	return: ERROR STATUS TO CHECK THE ERROR STATUS CHECK ENUM ABOVE
  */
-
-void Systick_vidSetCallBack(SystickISR Add_pfCallBackFunction)
+Systick_tenuErrorStatus Systick_vidSetCallBack(SystickISR Add_pfCallBackFunction)
 {
+	Systick_tenuErrorStatus Loc_enuReturnStatus = Systick_enuOk;
 	/*VALIDATE ON THE ADDRESS*/
 	if(Add_pfCallBackFunction != NULL)
 	{
 		/*SAVE THE ADDRESS OF CALLBACK FUNCTION*/
 		CallBack = Add_pfCallBackFunction;
 	}
+	else
+	{
+		Loc_enuReturnStatus = Systick_enuNullPointer;
+	}
+
+	return Loc_enuReturnStatus;
 }
 
 /*

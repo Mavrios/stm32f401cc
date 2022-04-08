@@ -12,9 +12,14 @@
 
 typedef void (*SystickISR) (void);
 
+typedef enum{
+	Systick_enuOk,
+	Systick_enuNullPointer
+}Systick_tenuErrorStatus;
+
 /******************************************** MACROS **********************************************/
-#define SYSTICK_u32AHB_DIV_BY_1			((u32) 0x02)
-#define SYSTICK_u32AHB_DIV_BY_8			((u32) 0x06)
+#define SYSTICK_u32AHB_DIV_BY_1			0x06
+#define SYSTICK_u32AHB_DIV_BY_8			0x02
 
 
 /******************************************* PROTOTYPES *******************************************/
@@ -35,8 +40,9 @@ void Systick_Init(u32 Copy_u32TimeMs);
  *
  *  Add_pfCallBackFunction: ADDRESS OF THE FUNCTION TO BE CALLED WHEN SYSTICK TIMER FINISHED
  *
+ *	return: ERROR STATUS TO CHECK THE ERROR STATUS CHECK ENUM ABOVE
  */
-void Systick_vidSetCallBack(SystickISR Add_pfCallBackFunction);
+Systick_tenuErrorStatus Systick_vidSetCallBack(SystickISR Add_pfCallBackFunction);
 /*
  * Function:  Systick_vidStart
  * --------------------
