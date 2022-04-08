@@ -31,4 +31,11 @@ typedef double                 f64;
 typedef long double            f128;
 
 #define NULL  ((void *) 0)
+
+typedef struct{
+	pu8 Data;
+	u32	Size;
+	u32 Used;
+}Buffer_t;
+
 #endif
