@@ -16,20 +16,20 @@
  * --------------------
  * ENABLE IRQ FOR SPECIFIC PERIPHERAL
  *
- * Copy_u8IRQn: NUMBER OF DESIRED IRQ
+ * Copy_enuIRQn: NUMBER OF DESIRED IRQ
  *
  *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
  *  CHECK NVIC_ErrorStatus_t ERROR ENUM.
  */
-NVIC_ErrorStatus_t NVIC_EnableIRQ(u8 Copy_u8IRQn) {
+NVIC_ErrorStatus_t NVIC_EnableIRQ(Nvic_tenuIRQn Copy_enuIRQn) {
 	/*DEFINE ERROR STATUS VARIABLE*/
 	NVIC_ErrorStatus_t Loc_enuReturnStatus = NVIC_enuOk;
 	/*DEFINE VARIABLE TO CALCULATE INDEX*/
-	u8 Loc_u8Index = Copy_u8IRQn / NVIC_u8REGISTER_SIZE;
+	u8 Loc_u8Index = (u8)Copy_enuIRQn / NVIC_u8REGISTER_SIZE;
 	/*DEFINE VARIABLE TO CALCULATE BIT*/
-	u8 Loc_u8Bit = Copy_u8IRQn % NVIC_u8REGISTER_SIZE;
+	u8 Loc_u8Bit = (u8)Copy_enuIRQn % NVIC_u8REGISTER_SIZE;
 	/*VALIDATE IRQ NUMBER*/
-	if (Copy_u8IRQn >= NVIC_u8NUMBER_OF_IRQ) {
+	if ((u8)Copy_enuIRQn >= NVIC_u8NUMBER_OF_IRQ) {
 		/*ASSIGN ERROR*/
 		Loc_enuReturnStatus = NVIC_enuErrorIRQNumber;
 	} else {
@@ -46,20 +46,20 @@ NVIC_ErrorStatus_t NVIC_EnableIRQ(u8 Copy_u8IRQn) {
  * --------------------
  * DISABLE IRQ FOR SPECIFIC PERIPHERAL
  *
- * Copy_u8IRQn: NUMBER OF DESIRED IRQ
+ * Copy_enuIRQn: NUMBER OF DESIRED IRQ
  *
  *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
  *  CHECK NVIC_ErrorStatus_t ERROR ENUM.
  */
-NVIC_ErrorStatus_t NVIC_DisableIRQ(u8 Copy_u8IRQn) {
+NVIC_ErrorStatus_t NVIC_DisableIRQ(Nvic_tenuIRQn Copy_enuIRQn) {
 	/*DEFINE ERROR STATUS VARIABLE*/
 	NVIC_ErrorStatus_t Loc_enuReturnStatus = NVIC_enuOk;
 	/*DEFINE VARIABLE TO CALCULATE INDEX*/
-	u8 Loc_u8Index = Copy_u8IRQn / NVIC_u8REGISTER_SIZE;
+	u8 Loc_u8Index = (u8)Copy_enuIRQn / NVIC_u8REGISTER_SIZE;
 	/*DEFINE VARIABLE TO CALCULATE BIT*/
-	u8 Loc_u8Bit = Copy_u8IRQn % NVIC_u8REGISTER_SIZE;
+	u8 Loc_u8Bit = (u8)Copy_enuIRQn % NVIC_u8REGISTER_SIZE;
 	/*VALIDATE IRQ NUMBER*/
-	if (Copy_u8IRQn >= NVIC_u8NUMBER_OF_IRQ) {
+	if ((u8)Copy_enuIRQn >= NVIC_u8NUMBER_OF_IRQ) {
 		/*ASSIGN ERROR*/
 		Loc_enuReturnStatus = NVIC_enuErrorIRQNumber;
 	} else {
@@ -74,21 +74,21 @@ NVIC_ErrorStatus_t NVIC_DisableIRQ(u8 Copy_u8IRQn) {
  * --------------------
  * READ PENDING FOR SPECIFIC IRQ
  *
- * Copy_u8IRQn: NUMBER OF DESIRED IRQ
+ * Copy_enuIRQn: NUMBER OF DESIRED IRQ
  * Add_pu8Pending: ADDRESS OF VARIABLE TO STORE RESULT INSIDE IT
  *
  *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
  *  CHECK NVIC_ErrorStatus_t ERROR ENUM.
  */
-NVIC_ErrorStatus_t NVIC_GetPendingIRQ(u8 Copy_u8IRQn, pu8 Add_pu8Pending) {
+NVIC_ErrorStatus_t NVIC_GetPendingIRQ(Nvic_tenuIRQn Copy_enuIRQn, pu8 Add_pu8Pending) {
 	/*DEFINE ERROR STATUS VARIABLE*/
 	NVIC_ErrorStatus_t Loc_enuReturnStatus = NVIC_enuOk;
 	/*DEFINE VARIABLE TO CALCULATE INDEX*/
-	u8 Loc_u8Index = Copy_u8IRQn / NVIC_u8REGISTER_SIZE;
+	u8 Loc_u8Index = (u8)Copy_enuIRQn / NVIC_u8REGISTER_SIZE;
 	/*DEFINE VARIABLE TO CALCULATE BIT*/
-	u8 Loc_u8Bit = Copy_u8IRQn % NVIC_u8REGISTER_SIZE;
+	u8 Loc_u8Bit = (u8)Copy_enuIRQn % NVIC_u8REGISTER_SIZE;
 	/*VALIDATE IRQ NUMBER*/
-	if (Copy_u8IRQn >= NVIC_u8NUMBER_OF_IRQ) {
+	if ((u8)Copy_enuIRQn >= NVIC_u8NUMBER_OF_IRQ) {
 		/*ASSIGN ERROR*/
 		Loc_enuReturnStatus = NVIC_enuErrorIRQNumber;
 	} else if (Add_pu8Pending == NULL) {
@@ -113,20 +113,20 @@ NVIC_ErrorStatus_t NVIC_GetPendingIRQ(u8 Copy_u8IRQn, pu8 Add_pu8Pending) {
  * --------------------
  * SET PENDING FOR SPECIFIC IRQ
  *
- * Copy_u8IRQn: NUMBER OF DESIRED IRQ
+ * Copy_enuIRQn: NUMBER OF DESIRED IRQ
  *
  *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
  *  CHECK NVIC_ErrorStatus_t ERROR ENUM.
  */
-NVIC_ErrorStatus_t NVIC_SetPendingIRQ(u8 Copy_u8IRQn) {
+NVIC_ErrorStatus_t NVIC_SetPendingIRQ(Nvic_tenuIRQn Copy_enuIRQn) {
 	/*DEFINE ERROR STATUS VARIABLE*/
 	NVIC_ErrorStatus_t Loc_enuReturnStatus = NVIC_enuOk;
 	/*DEFINE VARIABLE TO CALCULATE INDEX*/
-	u8 Loc_u8Index = Copy_u8IRQn / NVIC_u8REGISTER_SIZE;
+	u8 Loc_u8Index =(u8) Copy_enuIRQn / NVIC_u8REGISTER_SIZE;
 	/*DEFINE VARIABLE TO CALCULATE BIT*/
-	u8 Loc_u8Bit = Copy_u8IRQn % NVIC_u8REGISTER_SIZE;
+	u8 Loc_u8Bit =(u8) Copy_enuIRQn % NVIC_u8REGISTER_SIZE;
 	/*VALIDATE IRQ NUMBER*/
-	if (Copy_u8IRQn >= NVIC_u8NUMBER_OF_IRQ) {
+	if ((u8)Copy_enuIRQn >= NVIC_u8NUMBER_OF_IRQ) {
 		/*ASSIGN ERROR*/
 		Loc_enuReturnStatus = NVIC_enuErrorIRQNumber;
 	} else {
@@ -142,20 +142,20 @@ NVIC_ErrorStatus_t NVIC_SetPendingIRQ(u8 Copy_u8IRQn) {
  * --------------------
  * CLEAR PENDING FOR SPECIFIC IRQ
  *
- * Copy_u8IRQn: NUMBER OF DESIRED IRQ
+ * Copy_enuIRQn: NUMBER OF DESIRED IRQ
  *
  *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
  *  CHECK NVIC_ErrorStatus_t ERROR ENUM.
  */
-NVIC_ErrorStatus_t NVIC_ClearPendingIRQ(u8 Copy_u8IRQn) {
+NVIC_ErrorStatus_t NVIC_ClearPendingIRQ(Nvic_tenuIRQn Copy_enuIRQn) {
 	/*DEFINE ERROR STATUS VARIABLE*/
 	NVIC_ErrorStatus_t Loc_enuReturnStatus = NVIC_enuOk;
 	/*DEFINE VARIABLE TO CALCULATE INDEX*/
-	u8 Loc_u8Index = Copy_u8IRQn / NVIC_u8REGISTER_SIZE;
+	u8 Loc_u8Index = (u8)Copy_enuIRQn / NVIC_u8REGISTER_SIZE;
 	/*DEFINE VARIABLE TO CALCULATE BIT*/
-	u8 Loc_u8Bit = Copy_u8IRQn % NVIC_u8REGISTER_SIZE;
+	u8 Loc_u8Bit = (u8)Copy_enuIRQn % NVIC_u8REGISTER_SIZE;
 	/*VALIDATE IRQ NUMBER*/
-	if (Copy_u8IRQn >= NVIC_u8NUMBER_OF_IRQ) {
+	if ((u8)Copy_enuIRQn >= NVIC_u8NUMBER_OF_IRQ) {
 		/*ASSIGN ERROR*/
 		Loc_enuReturnStatus = NVIC_enuErrorIRQNumber;
 	} else {
@@ -171,21 +171,21 @@ NVIC_ErrorStatus_t NVIC_ClearPendingIRQ(u8 Copy_u8IRQn) {
  * --------------------
  * GET PENDING FOR SPECIFIC IRQ
  *
- * Copy_u8IRQn: NUMBER OF DESIRED IRQ
+ * Copy_enuIRQn: NUMBER OF DESIRED IRQ
  * Add_pu8Active: ADDRESS OF VARIABLE TO STORE THE RESULT INSIDE IT
  *
  *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
  *  CHECK NVIC_ErrorStatus_t ERROR ENUM.
  */
-NVIC_ErrorStatus_t NVIC_GetActive(u8 Copy_u8IRQn, pu8 Add_pu8Active) {
+NVIC_ErrorStatus_t NVIC_GetActive(Nvic_tenuIRQn Copy_enuIRQn, pu8 Add_pu8Active) {
 	/*DEFINE ERROR STATUS VARIABLE*/
 	NVIC_ErrorStatus_t Loc_enuReturnStatus = NVIC_enuOk;
 	/*DEFINE VARIABLE TO CALCULATE INDEX*/
-	u8 Loc_u8Index = Copy_u8IRQn / NVIC_u8REGISTER_SIZE;
+	u8 Loc_u8Index = (u8)Copy_enuIRQn / NVIC_u8REGISTER_SIZE;
 	/*DEFINE VARIABLE TO CALCULATE BIT*/
-	u8 Loc_u8Bit = Copy_u8IRQn % NVIC_u8REGISTER_SIZE;
+	u8 Loc_u8Bit = (u8)Copy_enuIRQn % NVIC_u8REGISTER_SIZE;
 	/*VALIDATE IRQ NUMBER*/
-	if (Copy_u8IRQn >= NVIC_u8NUMBER_OF_IRQ) {
+	if ((u8)Copy_enuIRQn >= NVIC_u8NUMBER_OF_IRQ) {
 		/*ASSIGN ERROR*/
 		Loc_enuReturnStatus = NVIC_enuErrorIRQNumber;
 	} else if (Add_pu8Active == NULL) {
@@ -210,7 +210,7 @@ NVIC_ErrorStatus_t NVIC_GetActive(u8 Copy_u8IRQn, pu8 Add_pu8Active) {
  * --------------------
  * SET PERIORITY FOR SPECIFIC IRQ
  *
- * Copy_u8IRQn: NUMBER OF DESIRED IRQ
+ * Copy_enuIRQn: NUMBER OF DESIRED IRQ
  * Copy_u8Priority: DESIRED PERIORITY WITH SUBGROUP PERIORITY
  *
  * NOTE: YOU CAN USE "getEncodingPriority" TO CALCULATE THE PERIORITY.
@@ -218,16 +218,16 @@ NVIC_ErrorStatus_t NVIC_GetActive(u8 Copy_u8IRQn, pu8 Add_pu8Active) {
  *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
  *  CHECK NVIC_ErrorStatus_t ERROR ENUM.
  */
-NVIC_ErrorStatus_t NVIC_SetPriority(u8 Copy_u8IRQn, u8 Copy_u8Priority) {
+NVIC_ErrorStatus_t NVIC_SetPriority(Nvic_tenuIRQn Copy_enuIRQn, u8 Copy_u8Priority) {
 	/*DEFINE ERROR STATUS VARIABLE*/
 	NVIC_ErrorStatus_t Loc_enuReturnStatus = NVIC_enuOk;
 	/*VALIDATE IRQ NUMBER*/
-	if (Copy_u8IRQn >= NVIC_u8NUMBER_OF_IRQ) {
+	if ((u8)Copy_enuIRQn >= NVIC_u8NUMBER_OF_IRQ) {
 		/*ASSIGN ERROR*/
 		Loc_enuReturnStatus = NVIC_enuErrorIRQNumber;
 	} else {
 		/*SET PERIORITY*/
-		NVIC->NVIC_IPR[Copy_u8IRQn] = Copy_u8Priority & NVIC_u8PRIORITY_MSK;
+		NVIC->NVIC_IPR[Copy_enuIRQn] = Copy_u8Priority & NVIC_u8PRIORITY_MSK;
 	}
 	/*RETURN ERROR STATUS*/
 	return Loc_enuReturnStatus;
@@ -238,17 +238,17 @@ NVIC_ErrorStatus_t NVIC_SetPriority(u8 Copy_u8IRQn, u8 Copy_u8Priority) {
  * --------------------
  * READ CURRENT PERIORITY FOR SPECIFIC IRQ
  *
- * Copy_u8IRQn: NUMBER OF DESIRED IRQ
+ * Copy_enuIRQn: NUMBER OF DESIRED IRQ
  * Add_pu8Priority: ADDRESS OF VARIABLE TO STORE THE RESULT INSIDE IT.
  *
  *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
  *  CHECK NVIC_ErrorStatus_t ERROR ENUM.
  */
-NVIC_ErrorStatus_t NVIC_GetPriority(u8 Copy_u8IRQn, pu8 Add_pu8Priority) {
+NVIC_ErrorStatus_t NVIC_GetPriority(Nvic_tenuIRQn Copy_enuIRQn, pu8 Add_pu8Priority) {
 	/*DEFINE ERROR STATUS VARIABLE*/
 	NVIC_ErrorStatus_t Loc_enuReturnStatus = NVIC_enuOk;
 	/*VALIDATE IRQ NUMBER*/
-	if (Copy_u8IRQn >= NVIC_u8NUMBER_OF_IRQ) {
+	if ((u8)Copy_enuIRQn >= NVIC_u8NUMBER_OF_IRQ) {
 		/*ASSIGN ERROR*/
 		Loc_enuReturnStatus = NVIC_enuErrorIRQNumber;
 	} else if (Add_pu8Priority == NULL) {
@@ -256,7 +256,7 @@ NVIC_ErrorStatus_t NVIC_GetPriority(u8 Copy_u8IRQn, pu8 Add_pu8Priority) {
 		Loc_enuReturnStatus = NVIC_enuErrorNullPointer;
 	} else {
 		/*READ PERIORITY*/
-		*Add_pu8Priority = NVIC->NVIC_IPR[Copy_u8IRQn];
+		*Add_pu8Priority = NVIC->NVIC_IPR[Copy_enuIRQn];
 	}
 	/*RETURN ERROR STATUS*/
 	return Loc_enuReturnStatus;

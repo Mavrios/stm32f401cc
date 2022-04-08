@@ -8,7 +8,7 @@
 #ifndef HSCHED_CFG_H_
 #define HSCHED_CFG_H_
 
-#define HSCHED_MAXIMUM		2
+#define HSCHED_MAXIMUM		1
 #define HSCHED_TICK_MS		1
 
 

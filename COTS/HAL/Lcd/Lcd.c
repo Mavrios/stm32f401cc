@@ -59,7 +59,7 @@ typedef enum {
 /******************************************* VARIABLE *******************************************/
 static u8 Lcd_u8InitState;
 static u8 Lcd_u8Request;
-static u8 * Lcd_String;
+static Buffer_t * Lcd_Buffer;
 static u8 Position;
 /******************************************* PROTOTYPES *******************************************/
 /*
@@ -69,6 +69,13 @@ static u8 Position;
  *
  */
 static void Lcd_WriteProcess(void);
+/*
+ * Function:  Lcd_ClearProcess
+ * --------------------
+ * FUNCTION TO BE CALLED IN THE TASK SCHEDULER FOR CLEAR LCD
+ *
+ */
+static void Lcd_ClearProcess(void);
 /*
  * Function:  InitProcess
  * --------------------
@@ -148,6 +155,7 @@ void Lcd_vidTask(void) {
 
 			break;
 		case Lcd_enuClear:
+			Lcd_ClearProcess();
 			break;
 		}
 	}
@@ -157,18 +165,18 @@ void Lcd_vidTask(void) {
  * --------------------
  * WRITE AN STRING IN SPECIFIC POSITION IN THE LCD
  *
- *	Add_pu8Str: POINTER TO THE REQUIRED STRING TO BE WRITTEN.
+ *	Add_pstrBuffer: POINTER TO THE REQUIRED BUFFER TO BE WRITTEN.
  *	Copy_u8PosX: DESIRED POSITION X OPTIONS (LCD_u8ROW_00 - LCD_u8ROW_01)
  *	Copy_u8PosY: DESIRED POSITION Y OPTIONS (LCD_u8COL_xx)
  *
  *	return: AN ERROR STATUS FROM ENUM Lcd_tenuErrorStatus.
  */
-Lcd_tenuErrorStatus Lcd_writeString(pu8 Add_pu8Str, u8 Copy_u8PosX,
-		u8 Copy_u8PosY) {
+Lcd_tenuErrorStatus Lcd_writeStringZCopy(Buffer_t * Add_pstrBuffer,
+		u8 Copy_u8PosX, u8 Copy_u8PosY) {
 	/*VARIABLE TO RETURN ERROR STATUS*/
 	Lcd_tenuErrorStatus Loc_enuReturnStatus = Lcd_enuOk;
 	/*VARIFY THE POINTER TO STRING*/
-	if (Add_pu8Str == NULL) {
+	if (Add_pstrBuffer == NULL) {
 		Loc_enuReturnStatus = Lcd_enuErrorNullPointer;
 	} else {
 		/*CHECK IF THE LCD HAS NO REQUESTS*/
@@ -176,9 +184,11 @@ Lcd_tenuErrorStatus Lcd_writeString(pu8 Add_pu8Str, u8 Copy_u8PosX,
 			/*WRITE AN WRITING REQUESTER*/
 			Lcd_u8Request = Lcd_enuWrite;
 			/*SAVE THE STRING */
-			Lcd_String = Add_pu8Str;
+			Lcd_Buffer = Add_pstrBuffer;
 			/*SAVE THE REQUIRED POSITION*/
 			Position = (u8) (Copy_u8PosX + Copy_u8PosY);
+			/*CLEAR INDEX*/
+			Add_pstrBuffer->Used = LCD_ZERO;
 		} else {
 			/*IF THE LCD BUSY ASSIGN BUSY TO RETURN STATUS*/
 			Loc_enuReturnStatus = Lcd_enuBusy;
@@ -188,6 +198,80 @@ Lcd_tenuErrorStatus Lcd_writeString(pu8 Add_pu8Str, u8 Copy_u8PosX,
 	return Loc_enuReturnStatus;
 }
 
+/*
+ * Function:  Lcd_writeString (ASYNCHRONOUS FUNCTION)
+ * --------------------
+ * WRITE AN STRING IN SPECIFIC POSITION IN THE LCD WITH TAKING COPY OF THE BUFFER
+ *
+ *	Add_pu8Str: POINTER TO THE REQUIRED STRING TO BE WRITTEN.
+ *	Copy_u8PosX: DESIRED POSITION X OPTIONS (LCD_u8ROW_00 - LCD_u8ROW_01)
+ *	Copy_u8PosY: DESIRED POSITION Y OPTIONS (LCD_u8COL_xx)
+ *
+ *	return: AN ERROR STATUS FROM ENUM Lcd_tenuErrorStatus.
+ */
+Lcd_tenuErrorStatus Lcd_writeString(Buffer_t * Add_pstrBuffer, u8 Copy_u8PosX,
+		u8 Copy_u8PosY) {
+	/*VARIABLE TO RETURN ERROR STATUS*/
+	Lcd_tenuErrorStatus Loc_enuReturnStatus = Lcd_enuOk;
+	static Buffer_t Copy_Buffer;
+	u8 Loc_u8Iterator;
+	static u8 Temp_String[LCD_MAXIMUM_SIZE];
+	/*VARIFY THE POINTER TO STRING*/
+	if (Add_pstrBuffer == NULL) {
+		Loc_enuReturnStatus = Lcd_enuErrorNullPointer;
+	}
+	if (Add_pstrBuffer->Size > LCD_MAXIMUM_SIZE) {
+		Loc_enuReturnStatus = Lcd_enuErrorSize;
+
+	} else {
+		/*CHECK IF THE LCD HAS NO REQUESTS*/
+		if (Lcd_u8Request == Lcd_enuNoReq) {
+			/*WRITE AN WRITING REQUESTER*/
+			Lcd_u8Request = Lcd_enuWrite;
+			/*SAVE THE STRING */
+			for (Loc_u8Iterator = LCD_ZERO;
+					Loc_u8Iterator < Add_pstrBuffer->Size; Loc_u8Iterator++) {
+				Temp_String[Loc_u8Iterator] =
+						Add_pstrBuffer->Data[Loc_u8Iterator];
+			}
+			Copy_Buffer.Data = Temp_String;
+			Copy_Buffer.Size = Add_pstrBuffer->Size;
+			Lcd_Buffer = &Copy_Buffer;
+			/*SAVE THE REQUIRED POSITION*/
+			Position = (u8) (Copy_u8PosX + Copy_u8PosY);
+			/*CLEAR INDEX*/
+			Add_pstrBuffer->Used = LCD_ZERO;
+		} else {
+			/*IF THE LCD BUSY ASSIGN BUSY TO RETURN STATUS*/
+			Loc_enuReturnStatus = Lcd_enuBusy;
+		}
+	}
+	/*RETURN ERROR STATUS*/
+	return Loc_enuReturnStatus;
+}
+
+/*
+ * Function:  Lcd_ClearLcd (ASYNCHRONOUS FUNCTION)
+ * --------------------
+ *	CLEAR ALL DATA DISPLAYED IN LCD
+ *
+ *
+ *	return: AN ERROR STATUS FROM ENUM Lcd_tenuErrorStatus.
+ */
+Lcd_tenuErrorStatus Lcd_ClearLcd(void) {
+	/*VARIABLE TO RETURN ERROR STATUS*/
+	Lcd_tenuErrorStatus Loc_enuReturnStatus = Lcd_enuOk;
+	/*CHECK IF THE LCD HAS NO REQUESTS*/
+	if (Lcd_u8Request == Lcd_enuNoReq) {
+		/*WRITE AN Clear REQUESTER*/
+		Lcd_u8Request = Lcd_enuClear;
+	} else {
+		/*IF THE LCD BUSY ASSIGN BUSY TO RETURN STATUS*/
+		Loc_enuReturnStatus = Lcd_enuBusy;
+	}
+	/*RETURN ERROR STATUS*/
+	return Loc_enuReturnStatus;
+}
 
 /*
  * Function:  Lcd_WriteProcess
@@ -196,8 +280,6 @@ Lcd_tenuErrorStatus Lcd_writeString(pu8 Add_pu8Str, u8 Copy_u8PosX,
  *
  */
 static void Lcd_WriteProcess(void) {
-	/*STATIC VARIABLE TO BE USED TO ITERATE IN THE STRING*/
-	static u8 Loc_u8Char;
 	/*ITERATOR TO BE USED IN LCD WRITE DATA BUS*/
 	u8 Loc_u8Iter;
 	/*TIMEMS TO TIME IN MS JOINED THE FUNC*/
@@ -209,24 +291,23 @@ static void Lcd_WriteProcess(void) {
 				LcdPinCfg[LCD_u8RS].Lcd_u16Pin, GPIO_u32LOW);
 		LCD_WRITE_DATA_BUS(Position)
 		;
-		TimeMs= (u8)(TimeMs + LCD_TICK_TIME_MS);
+		TimeMs = (u8) (TimeMs + LCD_TICK_TIME_MS);
 		break;
-	case LCD_TIME_TO_XY_SEND_DATA :
+	case LCD_TIME_TO_XY_SEND_DATA:
 		Gpio_setPinPortValue(LcdPinCfg[LCD_u8EN].Lcd_pvPort,
 				LcdPinCfg[LCD_u8EN].Lcd_u16Pin, GPIO_u32LOW);
-		TimeMs= (u8)(TimeMs + LCD_TICK_TIME_MS);
+		TimeMs = (u8) (TimeMs + LCD_TICK_TIME_MS);
 		break;
 	case LCD_TIME_TO_SEND_CHAR:
-		if (Lcd_String[Loc_u8Char] != '\0') {
+		if (Lcd_Buffer->Used != Lcd_Buffer->Size) {
 			Gpio_setPinPortValue(LcdPinCfg[LCD_u8RS].Lcd_pvPort,
 					LcdPinCfg[LCD_u8RS].Lcd_u16Pin, GPIO_u32HIGH);
-			LCD_WRITE_DATA_BUS(Lcd_String[Loc_u8Char]);
-			Loc_u8Char++;
+			LCD_WRITE_DATA_BUS(Lcd_Buffer->Data[Lcd_Buffer->Used]);
+			Lcd_Buffer->Used++;
 		} else {
 			Lcd_u8Request = Lcd_enuNoReq;
-			Loc_u8Char = LCD_ZERO;
 		}
-		TimeMs= (u8)(TimeMs + LCD_TICK_TIME_MS);
+		TimeMs = (u8) (TimeMs + LCD_TICK_TIME_MS);
 		break;
 
 	case LCD_TIME_TO_CHAR_SEND_DATA:
@@ -241,6 +322,36 @@ static void Lcd_WriteProcess(void) {
 
 }
 
+
+/*
+ * Function:  Lcd_ClearProcess
+ * --------------------
+ * FUNCTION TO BE CALLED IN THE TASK SCHEDULER FOR CLEAR LCD
+ *
+ */
+static void Lcd_ClearProcess(void)
+{
+	/*ITERATOR TO BE USED IN LCD WRITE DATA BUS*/
+	u8 Loc_u8Iter;
+	/*TIMEMS TO TIME IN MS JOINED THE FUNC*/
+	static u8 TimeMs;
+	if (TimeMs == 0) {
+		Gpio_setPinPortValue(LcdPinCfg[LCD_u8RS].Lcd_pvPort,
+				LcdPinCfg[LCD_u8RS].Lcd_u16Pin, GPIO_u32LOW);
+		LCD_WRITE_DATA_BUS(LCD_DISPLAY_CLR);
+	}
+	else if (TimeMs == 1) {
+		Gpio_setPinPortValue(LcdPinCfg[LCD_u8EN].Lcd_pvPort,
+				LcdPinCfg[LCD_u8EN].Lcd_u16Pin, GPIO_u32LOW);
+	}
+	else if(TimeMs == 2)
+	{
+		TimeMs = 0;
+		Lcd_u8Request = Lcd_enuNoReq;
+	}
+	TimeMs++;
+
+}
 
 /*
  * Function:  InitProcess
@@ -297,12 +408,16 @@ static void InitProcess(void) {
 					LcdPinCfg[LCD_u8RS].Lcd_u16Pin, GPIO_u32LOW);
 			LCD_WRITE_DATA_BUS(LCD_DISPLAY_CLR);
 		}
-		if (TimeMs == 2) {
+		else if (TimeMs == 2) {
 			Gpio_setPinPortValue(LcdPinCfg[LCD_u8EN].Lcd_pvPort,
 					LcdPinCfg[LCD_u8EN].Lcd_u16Pin, GPIO_u32LOW);
+		}
+		else if(TimeMs == 3)
+		{
 			Lcd_u8InitState++;
 			TimeMs = 0;
 		}
+
 		break;
 	case Lcd_enuModeSet:
 		TimeMs++;

@@ -20,7 +20,8 @@ typedef enum{
 	Lcd_enuBusy,
 	Lcd_enuGpioInitError,
 	Lcd_enuRccInitError,
-	Lcd_enuErrorNullPointer
+	Lcd_enuErrorNullPointer,
+	Lcd_enuErrorSize
 }Lcd_tenuErrorStatus;
 /******************************************** MACROS **********************************************/
 #define LCD_u8RS		0
@@ -73,9 +74,10 @@ Lcd_tenuErrorStatus Lcd_enuInit(void);
  */
 void Lcd_vidTask(void);
 /*
- * Function:  Lcd_writeString (ASYNCHRONOUS FUNCTION)
+ * Function:  Lcd_writeStringZCopy (ASYNCHRONOUS FUNCTION)
  * --------------------
- * WRITE AN STRING IN SPECIFIC POSITION IN THE LCD
+ * WRITE AN STRING IN SPECIFIC POSITION IN THE LCD WITH ZERO COPY
+ * CAUTION: DON'T EDIT PASSED BUFFER UNTIL THIS FUNCTION FINISH IT'S JOB
  *
  *	Add_pu8Str: POINTER TO THE REQUIRED STRING TO BE WRITTEN.
  *	Copy_u8PosX: DESIRED POSITION X OPTIONS (LCD_u8ROW_00 - LCD_u8ROW_01)
@@ -83,7 +85,29 @@ void Lcd_vidTask(void);
  *
  *	return: AN ERROR STATUS FROM ENUM Lcd_tenuErrorStatus.
  */
-Lcd_tenuErrorStatus Lcd_writeString(pu8 Add_pu8Str , u8 Copy_u8PosX , u8 Copy_u8PosY );
+Lcd_tenuErrorStatus Lcd_writeStringZCopy(Buffer_t * Add_pstrBuffer , u8 Copy_u8PosX , u8 Copy_u8PosY );
+/*
+ * Function:  Lcd_writeString (ASYNCHRONOUS FUNCTION)
+ * --------------------
+ * WRITE AN STRING IN SPECIFIC POSITION IN THE LCD WITH TAKING COPY OF THE BUFFER
+ *
+ *	Add_pu8Str: POINTER TO THE REQUIRED STRING TO BE WRITTEN.
+ *	Copy_u8PosX: DESIRED POSITION X OPTIONS (LCD_u8ROW_00 - LCD_u8ROW_01)
+ *	Copy_u8PosY: DESIRED POSITION Y OPTIONS (LCD_u8COL_xx)
+ *
+ *	return: AN ERROR STATUS FROM ENUM Lcd_tenuErrorStatus.
+ */
+Lcd_tenuErrorStatus Lcd_writeString(Buffer_t * Add_pstrBuffer , u8 Copy_u8PosX , u8 Copy_u8PosY );
+
+/*
+ * Function:  Lcd_ClearLcd (ASYNCHRONOUS FUNCTION)
+ * --------------------
+ *	CLEAR ALL DATA DISPLAYED IN LCD
+ *
+ *
+ *	return: AN ERROR STATUS FROM ENUM Lcd_tenuErrorStatus.
+ */
+Lcd_tenuErrorStatus Lcd_ClearLcd(void);
 
 /*EXTERN THE PIN CONFIGURATION FROM CFG FILE*/
 extern const Lcd_tstrCfg LcdPinCfg[];

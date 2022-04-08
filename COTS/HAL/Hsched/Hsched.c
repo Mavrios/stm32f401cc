@@ -88,7 +88,13 @@ static void vidSched(void)
 	/*TIME TO BE SAVE STORY OF THE CYCLICK*/
 	static volatile u32 timeMs;
 	/*INCREMENT THE COUNTER BASED ON TICK*/
+	if((u64) timeMs + HSCHED_TICK_MS > HSCHED_MAXIMUM_TIMEMS)
+	{
+		timeMs = HSCHED_TICK_MS;
+	}
+	else{
 	timeMs+=HSCHED_TICK_MS;
+	}
 	/*LOOP TO CHECK WHICH TASK NEEDED TO BE EXECUTED*/
 	for(Loc_u32Idx = HSCHED_ZERO ; Loc_u32Idx < HSCHED_MAXIMUM ; Loc_u32Idx++)
 	{
