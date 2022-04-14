@@ -56,18 +56,21 @@ void UsartBuffer_enuInit(void)
 			RCC_enuEnablePeripheralClk(RCC_u8APB2_BUS,RCC_u32APB2_USART1);
 			Loc_Uart_Config.Uart_pvChannel = UART_pvUART1;
 			Loc_Uart_Config.Uart_pfCallbackFnc = UartBuffer_vidHandler1;
+			Uart_ClearTCFlag(UartBuffer_Configurations[0].Uart_pvChannel);
 			NVIC_EnableIRQ(USART1_IRQn);
 			break;
 		case (u32) UART_pvUART2:
 			RCC_enuEnablePeripheralClk(RCC_u8APB1_BUS,RCC_u32APB1_USART2);
 			Loc_Uart_Config.Uart_pvChannel = UART_pvUART2;
 			Loc_Uart_Config.Uart_pfCallbackFnc = UartBuffer_vidHandler2;
+			Uart_ClearTCFlag(UartBuffer_Configurations[1].Uart_pvChannel);
 			NVIC_EnableIRQ(USART2_IRQn);
 			break;
 		case (u32) UART_pvUART6:
 			RCC_enuEnablePeripheralClk(RCC_u8APB2_BUS,RCC_u32APB2_USART6);
 			Loc_Uart_Config.Uart_pvChannel = UART_pvUART6;
 			Loc_Uart_Config.Uart_pfCallbackFnc = UartBuffer_vidHandler6;
+			Uart_ClearTCFlag(UartBuffer_Configurations[2].Uart_pvChannel);
 			NVIC_EnableIRQ(USART6_IRQn);
 			break;
 		}

@@ -118,8 +118,10 @@ Uart_tenuErrorStatus Uart_enuTransmiteData(void * Add_pvChannel,
 	if (Add_pvChannel == NULL) {
 		Loc_enuReturnStatus = Uart_enuErrorNullPointer;
 	} else {
+		if((Copy_u16Data & UART_u16DR_VALIDATE) == 0 )
+
 		/*ASSIGN THE DATA INTO DR*/
-		Loc_pstrUartChannel->USART_DR = Copy_u16Data & UART_u16DR_VALIDATE;
+		Loc_pstrUartChannel->USART_DR = Copy_u16Data;
 	}
 	/*RETURN THE RETURN STATUS*/
 	return Loc_enuReturnStatus;
