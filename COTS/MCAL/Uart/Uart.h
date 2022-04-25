@@ -27,6 +27,8 @@ typedef enum{
 	Uart_enuOk,
 	Uart_enuErrorNullPointer,
 	Uart_enuErrorOverSampling,
+	Uart_enuErrorInterruptStatus,
+	Uart_enuErrorDmaState
 
 }Uart_tenuErrorStatus;
 
@@ -60,12 +62,23 @@ typedef enum{
 #define UART_u16STOPBIT_ONE_HALF_BIT	((u16)  0x3000)
 
 
-#define UART_u8TXE_EMPTY					1
-#define UART_u8TXE_NOT_EMPTY				0
+#define UART_u8TXE_EMPTY					((u8) 0x01)
+#define UART_u8TXE_NOT_EMPTY				((u8) 0x00)
 
 
-#define UART_u8TX_COMPLETE					1
-#define UART_u8TX_NOT_COMPLETE				0
+#define UART_u8TX_COMPLETE					((u8) 0x01)
+#define UART_u8TX_NOT_COMPLETE				((u8) 0x00)
+
+#define UART_u8RX_NOTEMPTY					((u8) 0x01)
+#define UART_u8RX_EMPTY						((u8) 0x00)
+
+#define UART_u8INTERRUPT_ENABLE				((u8) 0x01)
+#define UART_u8INTERRUPT_DISABLE			((u8) 0x00)
+
+#define UART_u32DMA_TRANS_ENABLE			((u32) 0x00000080)
+#define UART_u32DMA_TRANS_DISABLE			((u32) 0xFFFFFF7F)
+#define UART_u32DMA_RECIEVE_ENABLE			((u32) 0x00000040)
+#define UART_u32DMA_RECIEVE_DISABLE			((u32) 0xFFFFFFBF)
 /******************************************* PROTOTYPES *******************************************/
 /*
  * Function:  Uart_vidInit
@@ -78,7 +91,20 @@ typedef enum{
  *  CHECK Uart_tenuErrorStatus ERROR ENUM.
  */
 
-Uart_tenuErrorStatus Uart_vidInit(Uart_Cfg_t * Add_pstrCfg);
+extern Uart_tenuErrorStatus Uart_vidInit(Uart_Cfg_t * Add_pstrCfg);
+/*
+ * Function:  Uart_vidDMACtrl
+ * --------------------
+ * CONTROL UART DMA FEATURE.
+ *
+ *	Add_pvChannel: DESIRED CHANNEL OPTIONS (UART_pvUARTx)
+ *	Copy_u32DmaState : DESIRED STATE OPTIONS--> (UART_u32DMA_xxxx)
+ *
+ *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
+ *  CHECK Uart_tenuErrorStatus ERROR ENUM.
+ */
+
+extern Uart_tenuErrorStatus Uart_vidDMACtrl(void * Add_pvChannel ,u32 Copy_u32DmaState);
 /*
  * Function:  Uart_enuTransmiteData
  * --------------------
@@ -91,7 +117,20 @@ Uart_tenuErrorStatus Uart_vidInit(Uart_Cfg_t * Add_pstrCfg);
  *  CHECK Uart_tenuErrorStatus ERROR ENUM.
  */
 
-Uart_tenuErrorStatus Uart_enuTransmiteData(void * Add_pvChannel , u16 Copy_u16Data);
+extern Uart_tenuErrorStatus Uart_enuTransmiteData(void * Add_pvChannel , u16 Copy_u16Data);
+/*
+ * Function:  Uart_enuRecieveData
+ * --------------------
+ * RECIEVE BYTE FROM UART.
+ *
+ *	Add_pvChannel: DESIRED CHANNEL OPTIONS (UART_pvUARTx)
+ *	Add_pu16Data : DESIRED DATA TO BE TRAMSMITTED
+ *
+ *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
+ *  CHECK Uart_tenuErrorStatus ERROR ENUM.
+ */
+
+extern Uart_tenuErrorStatus Uart_enuRecieveData(void * Add_pvChannel , pu16 Add_pu16Data);
 /*
  * Function:  Uart_ReadTXEFlag
  * --------------------
@@ -103,7 +142,19 @@ Uart_tenuErrorStatus Uart_enuTransmiteData(void * Add_pvChannel , u16 Copy_u16Da
  *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
  *  CHECK Uart_tenuErrorStatus ERROR ENUM.
  */
-Uart_tenuErrorStatus Uart_ReadTXEFlag	  (void * Add_pvChannel , pu8 Add_pu8FlagStatus);
+extern Uart_tenuErrorStatus Uart_ReadTXEFlag	  (void * Add_pvChannel , pu8 Add_pu8FlagStatus);
+/*
+ * Function:  Uart_ReadRXNEFlag
+ * --------------------
+ * READ TXNE FLAG
+ *
+ *	Add_pvChannel: DESIRED CHANNEL OPTIONS (UART_pvUARTx)
+ *	Add_pu8FlagStatus : ADDRESSED TO RETURN THE FLAG RESULT
+ *
+ *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
+ *  CHECK Uart_tenuErrorStatus ERROR ENUM.
+ */
+extern Uart_tenuErrorStatus Uart_ReadRXNEFlag	  (void * Add_pvChannel , pu8 Add_pu8FlagStatus);
 /*
  * Function:  Uart_ReadTCFlag
  * --------------------
@@ -115,7 +166,7 @@ Uart_tenuErrorStatus Uart_ReadTXEFlag	  (void * Add_pvChannel , pu8 Add_pu8FlagS
  *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
  *  CHECK Uart_tenuErrorStatus ERROR ENUM.
  */
-Uart_tenuErrorStatus Uart_ReadTCFlag	  (void * Add_pvChannel , pu8 Add_pu8FlagStatus);
+extern Uart_tenuErrorStatus Uart_ReadTCFlag	  (void * Add_pvChannel , pu8 Add_pu8FlagStatus);
 /*
  * Function:  Uart_ReadTCFlag
  * --------------------
@@ -126,8 +177,18 @@ Uart_tenuErrorStatus Uart_ReadTCFlag	  (void * Add_pvChannel , pu8 Add_pu8FlagSt
  *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
  *  CHECK Uart_tenuErrorStatus ERROR ENUM.
  */
-Uart_tenuErrorStatus Uart_ClearTCFlag	  (void * Add_pvChannel);
-
-
+extern Uart_tenuErrorStatus Uart_ClearTCFlag	  (void * Add_pvChannel);
+/*
+ * Function:  Uart_enuControlRXNEInterrupt
+ * --------------------
+ * CONTROL INTERRUPT FOR RXNE FLAG
+ *
+ *	Add_pvChannel: DESIRED CHANNEL OPTIONS (UART_pvUARTx)
+ *	Copy_u8InterruptStatus: INTERRUPT STATUS OPTIONS (UART_u8INTERRUPT_x)
+ *
+ *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
+ *  CHECK Uart_tenuErrorStatus ERROR ENUM.
+ */
+extern Uart_tenuErrorStatus Uart_enuControlRXNEInterrupt(void * Add_pvChannel,u8 Copy_u8InterruptStatus);
 
 #endif /* MCAL_UART_UART_H_ */

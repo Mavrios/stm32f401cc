@@ -70,6 +70,9 @@ typedef struct
 #define GPIOH		((void *) GPIOH_u32_BASE_ADDRESS)
 
 
+/************************************NVIC***************************************/
+
+
 #define NVIC_u32BASE_ADDRESS		0xE000E100
 
 
@@ -95,7 +98,7 @@ typedef struct{
 
 #define AISCR		*((volatile u32 *) 0xE000ED0C)
 
-
+/**********************************SYSTICK*************************************/
 
 #define SYSTICK_u32_BASE_ADDRESS		0xE000E010
 
@@ -107,4 +110,39 @@ typedef struct{
 }SYSTICK_Registers_t;
 
 #define SYSTICK		((SYSTICK_Registers_t *) SYSTICK_u32_BASE_ADDRESS)
+
+
+/**********************************USART*************************************/
+
+typedef struct{
+	volatile u32 USART_SR;
+	volatile u32 USART_DR;
+	volatile u32 USART_BRR;
+	volatile u32 USART_CR1;
+	volatile u32 USART_CR2;
+	volatile u32 USART_CR3;
+	volatile u32 USART_GTPR;
+}Usart_Regitsers_t;
+
+
+/********************************* DMA ***************************************/
+typedef struct{
+	volatile u32 DMA_SxCR;
+	volatile u32 DMA_SxNDTR;
+	volatile u32 DMA_SxPAR;
+	volatile u32 DMA_SxM0AR;
+	volatile u32 DMA_SxM1AR;
+	volatile u32 DMA_SxFCR;
+}DMAx_t;
+
+typedef struct{
+	volatile u32 DMA_LISR;
+	volatile u32 DMA_HISR;
+	volatile u32 DMA_LIFCR;
+	volatile u32 DMA_HIFCR;
+	volatile DMAx_t DMA_x[8];
+}DMA_Register_t;
+
+
+
 #endif

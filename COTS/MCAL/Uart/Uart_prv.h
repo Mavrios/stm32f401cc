@@ -31,6 +31,9 @@
 
 #define UART_u16SU_TXE					((u16) 0x0080)
 #define UART_u16SU_TC					((u16) 0x0040)
+#define UART_u16SU_RXNE					((u16) 0x0020)
+#define UART_u16SU_RXNE					((u16) 0x0020)
+#define UART_u32CR1_RXNEIE				((u32) 0x00000020)
 
 #define UART_u16CLEAR_TC					((u16) 0xFFBF)
 

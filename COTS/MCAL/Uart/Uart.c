@@ -79,6 +79,7 @@ Uart_tenuErrorStatus Uart_vidInit(Uart_Cfg_t * Add_pstrCfg) {
 		Loc_pstrUartChannel->USART_CR2 &= UART_u16CR2_CLRMSK;
 		Loc_pstrUartChannel->USART_CR2 |= Add_pstrCfg->Uart_u16StopBits;
 		Loc_pstrUartChannel->USART_BRR = Loc_u32BaudRate;
+		Loc_pstrUartChannel->USART_SR &=UART_u16CLEAR_TC;
 		/*SWITCH ON CHANNEL TO ASSIGN THE CALLBACK FUNCTIONS*/
 		switch ((u32)Add_pstrCfg->Uart_pvChannel) {
 		case (u32) UART_pvUART1:
@@ -95,6 +96,52 @@ Uart_tenuErrorStatus Uart_vidInit(Uart_Cfg_t * Add_pstrCfg) {
 
 	return Loc_enuReturnStatus;
 }
+
+/*
+ * Function:  Uart_vidDMACtrl
+ * --------------------
+ * CONTROL UART DMA FEATURE.
+ *
+ *	Add_pvChannel: DESIRED CHANNEL OPTIONS (UART_pvUARTx)
+ *	Copy_u32DmaState : DESIRED STATE OPTIONS--> (UART_u32DMA_xxxx)
+ *
+ *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
+ *  CHECK Uart_tenuErrorStatus ERROR ENUM.
+ */
+
+extern Uart_tenuErrorStatus Uart_vidDMACtrl(void * Add_pvChannel ,u32 Copy_u32DmaState)
+{
+	/*DECLARE RETURN STATUS AND INIT WITH OK*/
+	Uart_tenuErrorStatus Loc_enuReturnStatus = Uart_enuOk;
+	/*ASSIGN THE PASSED CHANNEL INTO POINTER WITH VALID DATATYPE*/
+	Usart_Regitsers_t * Loc_pstrUartChannel = Add_pvChannel;
+	/*VALIDATE ON THE CHANNEL*/
+	if (Add_pvChannel == NULL) {
+		Loc_enuReturnStatus = Uart_enuErrorNullPointer;
+	} else {
+		switch(Copy_u32DmaState)
+		{
+		case UART_u32DMA_TRANS_ENABLE:
+			Loc_pstrUartChannel->USART_CR3 |=Copy_u32DmaState;
+			break;
+		case UART_u32DMA_RECIEVE_ENABLE:
+			Loc_pstrUartChannel->USART_CR3 |=Copy_u32DmaState;
+			break;
+		case UART_u32DMA_TRANS_DISABLE:
+			Loc_pstrUartChannel->USART_CR3 &=Copy_u32DmaState;
+			break;
+		case UART_u32DMA_RECIEVE_DISABLE:
+			Loc_pstrUartChannel->USART_CR3 &=Copy_u32DmaState;
+			break;
+		default:
+			Loc_enuReturnStatus = Uart_enuErrorDmaState;
+			break;
+		}
+	}
+	/*RETURN THE RETURN STATUS*/
+	return Loc_enuReturnStatus;
+}
+
 
 /*
  * Function:  Uart_enuTransmiteData
@@ -118,10 +165,42 @@ Uart_tenuErrorStatus Uart_enuTransmiteData(void * Add_pvChannel,
 	if (Add_pvChannel == NULL) {
 		Loc_enuReturnStatus = Uart_enuErrorNullPointer;
 	} else {
-		if((Copy_u16Data & UART_u16DR_VALIDATE) == 0 )
+		if((Loc_pstrUartChannel->USART_SR & UART_u16SU_TXE) && (Copy_u16Data & UART_u16DR_VALIDATE) == 0)
 
 		/*ASSIGN THE DATA INTO DR*/
 		Loc_pstrUartChannel->USART_DR = Copy_u16Data;
+	}
+	/*RETURN THE RETURN STATUS*/
+	return Loc_enuReturnStatus;
+}
+
+
+
+/*
+ * Function:  Uart_enuRecieveData
+ * --------------------
+ * TRANSMIT BYTE THROUGH UART.
+ *
+ *	Add_pvChannel: DESIRED CHANNEL OPTIONS (UART_pvUARTx)
+ *	Copy_u16Data : DESIRED DATA TO BE TRAMSMITTED
+ *
+ *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
+ *  CHECK Uart_tenuErrorStatus ERROR ENUM.
+ */
+Uart_tenuErrorStatus Uart_enuRecieveData(void * Add_pvChannel,
+		pu16  Add_pu16Data) {
+	/*DECLARE RETURN STATUS AND INIT WITH OK*/
+	Uart_tenuErrorStatus Loc_enuReturnStatus = Uart_enuOk;
+	/*ASSIGN THE PASSED CHANNEL INTO POINTER WITH VALID DATATYPE*/
+	Usart_Regitsers_t * Loc_pstrUartChannel = Add_pvChannel;
+	/*VALIDATE ON THE CHANNEL*/
+	if (Add_pvChannel == NULL || Add_pu16Data == NULL) {
+		Loc_enuReturnStatus = Uart_enuErrorNullPointer;
+	} else {
+		if((Loc_pstrUartChannel->USART_SR & UART_u16SU_RXNE))
+
+		/*ASSIGN THE DATA INTO DR*/
+			*Add_pu16Data =(u16) (Loc_pstrUartChannel->USART_DR);
 	}
 	/*RETURN THE RETURN STATUS*/
 	return Loc_enuReturnStatus;
@@ -222,6 +301,81 @@ Uart_tenuErrorStatus Uart_ClearTCFlag	  (void * Add_pvChannel)
 	return Loc_enuReturnStatus;
 }
 
+
+/*
+ * Function:  Uart_ReadRXNEFlag
+ * --------------------
+ * READ TXNE FLAG
+ *
+ *	Add_pvChannel: DESIRED CHANNEL OPTIONS (UART_pvUARTx)
+ *	Add_pu8FlagStatus : ADDRESSED TO RETURN THE FLAG RESULT
+ *
+ *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
+ *  CHECK Uart_tenuErrorStatus ERROR ENUM.
+ */
+extern Uart_tenuErrorStatus Uart_ReadRXNEFlag	  (void * Add_pvChannel , pu8 Add_pu8FlagStatus)
+{
+	/*DECLARE RETURN STATUS AND INIT WITH OK*/
+	Uart_tenuErrorStatus Loc_enuReturnStatus = Uart_enuOk;
+	Usart_Regitsers_t * Loc_pstrUartChannel = Add_pvChannel;
+	/*VALIDATE ON THE ARGUMENTS*/
+	if (Add_pvChannel == NULL ||  Add_pu8FlagStatus == NULL) {
+		Loc_enuReturnStatus = Uart_enuErrorNullPointer;
+	} else {
+		/*READ THE FLAG AND ASSIGN THE RESULT*/
+		if(Loc_pstrUartChannel->USART_SR & UART_u16SU_RXNE )
+		{
+			*Add_pu8FlagStatus = UART_u8RX_NOTEMPTY;
+		}
+		else
+		{
+			*Add_pu8FlagStatus = UART_u8RX_EMPTY;
+		}
+	}
+	/*RETURN AN ERROR STATUS*/
+	return Loc_enuReturnStatus;
+
+}
+
+
+/*
+ * Function:  Uart_enuControlRXNEInterrupt
+ * --------------------
+ * CONTROL INTERRUPT FOR RXNE FLAG
+ *
+ *	Add_pvChannel: DESIRED CHANNEL OPTIONS (UART_pvUARTx)
+ *	Copy_u8InterruptStatus: INTERRUPT STATUS OPTIONS (UART_u8INTERRUPT_x)
+ *
+ *  returns: AN ERROR STATUS IF SOMETHING WRONG HAPPENED
+ *  CHECK Uart_tenuErrorStatus ERROR ENUM.
+ */
+extern Uart_tenuErrorStatus Uart_enuControlRXNEInterrupt(void * Add_pvChannel,u8 Copy_u8InterruptStatus)
+{
+	/*DECLARE RETURN STATUS AND INIT WITH OK*/
+	Uart_tenuErrorStatus Loc_enuReturnStatus = Uart_enuOk;
+	Usart_Regitsers_t * Loc_pstrUartChannel = Add_pvChannel;
+	/*VALIDATE ON THE ARGUMENTS*/
+	if (Add_pvChannel == NULL) {
+		Loc_enuReturnStatus = Uart_enuErrorNullPointer;
+	}
+	else {
+		switch(Copy_u8InterruptStatus)
+		{
+			case UART_u8INTERRUPT_ENABLE:
+				Loc_pstrUartChannel->USART_CR1 |= UART_u32CR1_RXNEIE;
+				break;
+			case UART_u8INTERRUPT_DISABLE:
+				Loc_pstrUartChannel->USART_CR1 &= ~(UART_u32CR1_RXNEIE);
+				break;
+			default:
+				Loc_enuReturnStatus = Uart_enuErrorInterruptStatus;
+				break;
+		}
+	}
+	/*RETURN AN ERROR STATUS*/
+	return Loc_enuReturnStatus;
+
+}
 /*******************************************ISR****************************************************/
 void USART1_IRQHandler(void) {
 	if(Uart_Callback[UART_USART1])
