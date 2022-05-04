@@ -5,11 +5,12 @@
  *      Author: Kishk
  */
 
-#include <SERVICES/Bit_utils.h>
 #include <SERVICES/Std_types.h>
+#include <SERVICES/Bit_utils.h>
+#include <MCAL/Uart/Uart.h>
 #include <HAL/Uart_Buffer/UartBuffer.h>
 #include <HAL/Uart_Buffer/UartBuffer_cfg.h>
-#include <MCAL/Uart/Uart.h>
+
 
 
 
